@@ -16,6 +16,7 @@ env:
   DOCKER_DRIVER: overlay2
   VERSION_NUMBER: $GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER
   PROJECT_URL: $GITHUB_REPOSITORY
+  AWS_ECR_URL: ${{ secrets.AWS_ECR_URL }}
 
 jobs:
   react-build:
@@ -40,7 +41,13 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: build
-      - run: |
-          apk add --no-cache curl jq python3 py-pip
-          pip install awscli
-          docker build -t $PROJECT_URL:$VERSION_NUMBER .
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ca-central-1
+      - uses: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          docker build -t $AWS_ECR_URL/$PROJECT_URL:$VERSION_NUMBER .
+          docker push $AWS_ECR_URL/$PROJECT_URL:$VERSION_NUMBER
