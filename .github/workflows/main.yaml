@@ -13,9 +13,11 @@ on:
 
 jobs:
   react-build:
-    runs-on: node-latest
+    runs-on: ubuntu-latest
     steps:
-    - name: npm install
-      run: npm install
-    - name: npm run build
-      run: npm run build
+    - name: Check out repository code
+      run: actions/checkout@v2
+    - name: Install NodeJS
+      run: |
+        sudo apt-get update
+        sudo apt-get install nodejs
