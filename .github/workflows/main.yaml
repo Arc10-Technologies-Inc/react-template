@@ -11,6 +11,12 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  VERSION_NUMBER: $GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER
+  PROJECT_URL: $GITHUB_REPOSITORY
+
 jobs:
   react-build:
     runs-on: ubuntu-latest
@@ -25,3 +31,15 @@ jobs:
         with:
           name: build
           path: ./build
+  
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: build
+      - run: |
+          apk add --no-cache curl jq python3 py-pip
+          pip install awscli
+          docker build -t $PROJECT_URL:$VERSION_NUMBER .
