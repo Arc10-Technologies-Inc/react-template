@@ -12,8 +12,6 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_DRIVER: overlay2
   VERSION_NUMBER: $GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_NUMBER
   PROJECT_URL: $GITHUB_REPOSITORY
   AWS_ECR_URL: ${{ secrets.AWS_ECR_URL }}
