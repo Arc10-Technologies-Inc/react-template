@@ -15,8 +15,6 @@ jobs:
   react-build:
     runs-on: ubuntu-latest
     steps:
-    - name: Check out repository code
-      run: actions/checkout@v2
     - name: Install NodeJS
       run: |
         sudo apt-get update
