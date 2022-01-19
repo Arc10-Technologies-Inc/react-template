@@ -80,3 +80,8 @@ jobs:
     - name: Deploy to kubernetes
       run: |
         kubectl config set-credentials ${{ secrets.K8S_USER }} --token=${{ secrets.K8S_TOKEN }}
+        kubectl config set-cluster ${{ secrets.K8S_CTR }} --insecure-skip-tls-verify=true --server=${{ secrets.K8S_URL }}
+        kubectl config set-context ${{ secrets.K8S_CTR }} --user=${{ secrets.K8S_USER }} --cluster=${{ secrets.K8S_CTR }}
+        kubectl config use-context ${{ secrets.K8S_CTR }}
+        kubectl apply -f ./deployment -n dev
+        kubectl set image deployment/$ECR_REPOSITORY $ECR_REPOSITORY=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -n dev
