@@ -77,6 +77,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [react-build, docker-build]
     steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+      
     - name: Deploy to kubernetes
       run: |
         kubectl config set-credentials ${{ secrets.K8S_USER }} --token=${{ secrets.K8S_TOKEN }}
