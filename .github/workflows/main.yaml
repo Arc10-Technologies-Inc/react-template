@@ -14,7 +14,7 @@ on:
 env:
   IMAGE_TAG: ${{ github.sha }}
   ECR_REPOSITORY: react-template
-  ECR_REGISTRY: ${{secret.ECR_REGISTRY}}
+  ECR_REGISTRY: ${{ secret.ECR_REGISTRY }}
 
 jobs:
   react-build:
